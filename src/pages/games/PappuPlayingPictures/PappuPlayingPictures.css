@@ -1,0 +1,410 @@
+.ppx-shell {
+  min-height: 100vh;
+  background: radial-gradient(1200px 600px at 20% -10%, #1a243a 0%, #0f172a 45%, #020617 100%);
+  color: #f8fafc;
+  display: flex;
+  justify-content: center;
+  padding: 24px 16px 48px;
+  font-family: "Poppins", "Segoe UI", sans-serif;
+}
+
+.ppx-stage {
+  width: min(1200px, 100%);
+}
+
+/* Topbar keeps navigation visible and builds premium trust */
+.ppx-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 18px;
+  background: linear-gradient(180deg, rgba(2, 6, 23, 0.9), rgba(2, 6, 23, 0.65));
+  border: 1px solid rgba(148, 163, 184, 0.15);
+  border-radius: 16px;
+  box-shadow: 0 16px 40px rgba(2, 6, 23, 0.6);
+}
+
+.ppx-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.ppx-logo-img {
+  width: 58px;
+  height: 58px;
+  border-radius: 12px;
+  object-fit: cover;
+  box-shadow: 0 10px 28px rgba(245, 197, 66, 0.35);
+  border: 1px solid rgba(245, 197, 66, 0.6);
+}
+
+.ppx-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #f8fafc;
+}
+
+.ppx-subtitle {
+  font-size: 12px;
+  color: rgba(248, 250, 252, 0.6);
+}
+
+.ppx-back {
+  background: #1e293b;
+  color: #f8fafc;
+  border: 1px solid rgba(248, 250, 252, 0.1);
+  padding: 10px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.ppx-grid-wrap {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr;
+  gap: 18px;
+  margin-top: 18px;
+}
+
+.ppx-reveal-area {
+  margin-top: 18px;
+  padding: 16px;
+  border-radius: 18px;
+  background: linear-gradient(180deg, rgba(10, 18, 36, 0.95), rgba(2, 6, 23, 0.95));
+  border: 1px solid rgba(245, 197, 66, 0.2);
+  box-shadow: 0 18px 40px rgba(2, 6, 23, 0.6);
+}
+
+.ppx-reveal-banner {
+  margin-bottom: 14px;
+  text-align: center;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px dashed rgba(245, 197, 66, 0.4);
+  background: rgba(2, 6, 23, 0.7);
+}
+
+.ppx-reveal-banner.win {
+  color: #22c55e;
+  box-shadow: 0 0 24px rgba(34, 197, 94, 0.35);
+}
+
+.ppx-reveal-banner.lose,
+.ppx-reveal-banner.loss {
+  color: #ef4444;
+  box-shadow: 0 0 24px rgba(239, 68, 68, 0.35);
+}
+
+.ppx-reveal-card {
+  position: relative;
+  min-height: 190px;
+  border-radius: 16px;
+  border: 1px solid rgba(148, 163, 184, 0.15);
+  background: radial-gradient(circle at top, rgba(245, 197, 66, 0.08), rgba(2, 6, 23, 0.95));
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+
+.ppx-reveal-img {
+  width: 88px;
+  height: 88px;
+  object-fit: contain;
+  filter: drop-shadow(0 10px 18px rgba(0, 0, 0, 0.45));
+}
+
+.ppx-reveal-label {
+  margin-top: 8px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: rgba(248, 250, 252, 0.8);
+}
+
+/* Board: visual focus area */
+.ppx-board {
+  padding: 18px;
+  border-radius: 18px;
+  background: linear-gradient(180deg, rgba(15, 23, 42, 0.95), rgba(2, 6, 23, 0.95));
+  border: 1px solid rgba(248, 250, 252, 0.06);
+  box-shadow: 0 22px 50px rgba(2, 6, 23, 0.7);
+}
+
+.ppx-status {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px solid rgba(245, 197, 66, 0.25);
+  padding: 12px 14px;
+  border-radius: 12px;
+  margin-bottom: 16px;
+}
+
+.ppx-status-text {
+  font-size: 14px;
+  color: rgba(248, 250, 252, 0.9);
+}
+
+.ppx-status-indicator {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #f5c542;
+  box-shadow: 0 0 12px rgba(245, 197, 66, 0.8);
+}
+
+.ppx-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.ppx-tile {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(245, 197, 66, 0.25);
+  border-radius: 14px;
+  padding: 12px;
+  background: radial-gradient(circle at 30% 20%, rgba(245, 197, 66, 0.08), rgba(2, 6, 23, 0.9));
+  cursor: pointer;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+  min-height: 120px;
+}
+
+.ppx-tile:hover {
+  transform: translateY(-2px);
+  border-color: rgba(245, 197, 66, 0.6);
+  box-shadow: 0 10px 22px rgba(245, 197, 66, 0.2);
+}
+
+.ppx-tile.is-active {
+  border-color: #f5c542;
+  box-shadow: 0 0 20px rgba(245, 197, 66, 0.5);
+  transform: translateY(-3px);
+}
+
+.ppx-tile-inner {
+  height: 100%;
+  display: grid;
+  place-items: center;
+  gap: 8px;
+}
+
+.ppx-tile-img {
+  width: 52px;
+  height: 52px;
+  object-fit: contain;
+  filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.45));
+}
+
+.ppx-tile-label {
+  font-size: 12px;
+  color: rgba(248, 250, 252, 0.85);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.ppx-scratch {
+  position: absolute;
+  inset: 8px;
+  width: calc(100% - 16px);
+  height: calc(100% - 16px);
+  border-radius: 12px;
+  cursor: default;
+  pointer-events: none;
+}
+
+.ppx-scratch-hint {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: rgba(248, 250, 252, 0.8);
+  pointer-events: none;
+  mix-blend-mode: screen;
+}
+
+/* Right panel: actions and chips */
+.ppx-panel {
+  display: grid;
+  gap: 16px;
+}
+
+.ppx-card {
+  background: linear-gradient(180deg, rgba(2, 6, 23, 0.95), rgba(15, 23, 42, 0.9));
+  border: 1px solid rgba(148, 163, 184, 0.1);
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 0 20px 40px rgba(2, 6, 23, 0.6);
+}
+
+.ppx-card-title {
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: #f5c542;
+}
+
+.ppx-chips {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.ppx-custom {
+  display: grid;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.ppx-custom-label {
+  font-size: 12px;
+  color: rgba(248, 250, 252, 0.7);
+}
+
+.ppx-custom-input {
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  background: rgba(15, 23, 42, 0.9);
+  color: #f8fafc;
+}
+
+.ppx-chip {
+  border-radius: 999px;
+  border: 1px solid rgba(245, 197, 66, 0.5);
+  background: rgba(2, 6, 23, 0.8);
+  color: #f8fafc;
+  padding: 10px 0;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.ppx-chip.is-active {
+  background: linear-gradient(180deg, #f5c542, #d8a631);
+  color: #020617;
+  box-shadow: 0 10px 22px rgba(245, 197, 66, 0.35);
+}
+
+.ppx-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.ppx-btn {
+  padding: 12px 0;
+  border-radius: 12px;
+  border: none;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.ppx-btn-primary {
+  background: linear-gradient(180deg, #f5c542, #c48d1d);
+  color: #020617;
+}
+
+.ppx-btn-accent {
+  background: linear-gradient(180deg, #22c55e, #128a3e);
+  color: #020617;
+}
+
+.ppx-result {
+  border: 1px dashed rgba(245, 197, 66, 0.5);
+  border-radius: 14px;
+  padding: 14px;
+  text-align: center;
+}
+
+.ppx-result-badge {
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+  color: rgba(248, 250, 252, 0.8);
+}
+
+.ppx-result-badge.win {
+  color: #22c55e;
+}
+
+.ppx-result-badge.lose,
+.ppx-result-badge.loss {
+  color: #ef4444;
+}
+
+.ppx-result-anim {
+  height: 46px;
+  border-radius: 12px;
+  background: linear-gradient(90deg, rgba(245, 197, 66, 0.1), rgba(245, 197, 66, 0.4), rgba(245, 197, 66, 0.1));
+  animation: shimmer 2s infinite;
+}
+
+.ppx-result-note {
+  margin-top: 8px;
+  font-size: 12px;
+  color: rgba(248, 250, 252, 0.6);
+}
+
+.ppx-card-mini {
+  padding: 12px 16px;
+}
+
+.ppx-mini-title {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: rgba(245, 197, 66, 0.8);
+  margin-bottom: 6px;
+}
+
+.ppx-mini-text {
+  font-size: 13px;
+  color: rgba(248, 250, 252, 0.75);
+}
+
+.ppx-footer {
+  margin-top: 18px;
+  text-align: center;
+  font-size: 12px;
+  color: rgba(248, 250, 252, 0.55);
+}
+
+@keyframes shimmer {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 100% 50%; }
+}
+
+@media (max-width: 980px) {
+  .ppx-grid-wrap {
+    grid-template-columns: 1fr;
+  }
+
+  .ppx-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .ppx-topbar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .ppx-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .ppx-actions {
+    grid-template-columns: 1fr;
+  }
+}

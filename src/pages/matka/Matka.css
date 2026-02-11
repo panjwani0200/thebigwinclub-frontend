@@ -1,0 +1,241 @@
+.matka-shell {
+  min-height: 100vh;
+  background: radial-gradient(1000px 500px at 20% -10%, #1b2440 0%, #0f172a 50%, #020617 100%);
+  color: #f8fafc;
+  padding: 24px 16px 48px;
+  font-family: "Manrope", "Segoe UI", sans-serif;
+}
+
+.matka-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 18px;
+  border-radius: 16px;
+  background: rgba(2, 6, 23, 0.85);
+  border: 1px solid rgba(245, 197, 66, 0.25);
+  box-shadow: 0 16px 40px rgba(2, 6, 23, 0.6);
+}
+
+.matka-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #f5c542;
+}
+
+.matka-subtitle {
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+.matka-btn {
+  background: #1f2937;
+  color: #f8fafc;
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  padding: 8px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.matka-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+  margin-top: 18px;
+}
+
+.matka-card {
+  background: linear-gradient(180deg, rgba(2, 6, 23, 0.98), rgba(15, 23, 42, 0.95));
+  border: 1px solid rgba(245, 197, 66, 0.2);
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 0 18px 38px rgba(2, 6, 23, 0.6);
+}
+
+.matka-card h3 {
+  margin: 0 0 6px;
+  font-size: 16px;
+}
+
+.matka-status {
+  font-size: 12px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  display: inline-block;
+  margin-top: 8px;
+}
+
+.matka-status.running {
+  background: rgba(34, 197, 94, 0.15);
+  color: #22c55e;
+  border: 1px solid rgba(34, 197, 94, 0.5);
+}
+
+.matka-status.closed {
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.5);
+}
+
+.matka-result {
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  margin-top: 10px;
+}
+
+.matka-cta {
+  margin-top: 14px;
+  width: 100%;
+  padding: 10px 0;
+  border-radius: 12px;
+  border: none;
+  font-weight: 700;
+  cursor: pointer;
+  background: linear-gradient(180deg, #f5c542, #c48d1d);
+  color: #020617;
+}
+
+.matka-cta.disabled {
+  background: #111827;
+  color: #64748b;
+  cursor: not-allowed;
+}
+
+.matka-play {
+  margin-top: 18px;
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 16px;
+}
+
+.matka-panel {
+  background: rgba(2, 6, 23, 0.9);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  border-radius: 16px;
+  padding: 16px;
+}
+
+.matka-bet-types {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.matka-bet-card {
+  width: 100%;
+  text-align: left;
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(245, 197, 66, 0.3);
+  background: rgba(15, 23, 42, 0.9);
+  cursor: pointer;
+}
+
+.matka-bet-card:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.matka-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(2, 6, 23, 0.7);
+  display: grid;
+  place-items: center;
+  z-index: 20;
+}
+
+.matka-modal-card {
+  width: min(420px, 92vw);
+  background: #0b1220;
+  border: 1px solid rgba(245, 197, 66, 0.3);
+  border-radius: 16px;
+  padding: 18px;
+}
+
+.matka-input {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(148, 163, 184, 0.3);
+  background: #0f172a;
+  color: white;
+  margin-top: 8px;
+}
+
+.matka-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.matka-patti {
+  display: grid;
+  gap: 12px;
+  max-height: 340px;
+  overflow: auto;
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  border-radius: 12px;
+  padding: 10px;
+  background: rgba(2, 6, 23, 0.7);
+}
+
+.matka-patti-group {
+  background: rgba(15, 23, 42, 0.8);
+  border: 1px solid rgba(148, 163, 184, 0.15);
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.matka-patti-title {
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(245, 197, 66, 0.8);
+  margin-bottom: 8px;
+}
+
+.matka-patti-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.matka-jodi-grid {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.matka-patti-btn {
+  padding: 8px 6px;
+  border-radius: 8px;
+  border: 1px solid rgba(245, 197, 66, 0.35);
+  background: #0b1220;
+  color: #f8fafc;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.matka-patti-btn.active {
+  background: linear-gradient(180deg, #f5c542, #c48d1d);
+  color: #020617;
+}
+
+.matka-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 12px;
+}
+
+.matka-table th,
+.matka-table td {
+  padding: 8px 10px;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.15);
+  font-size: 13px;
+}
+
+@media (max-width: 980px) {
+  .matka-play {
+    grid-template-columns: 1fr;
+  }
+}

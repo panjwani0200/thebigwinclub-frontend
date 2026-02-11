@@ -1,0 +1,258 @@
+.tp-shell {
+  min-height: 100vh;
+  background: radial-gradient(1000px 600px at 20% -10%, #1b2a4a 0%, #0f172a 55%, #020617 100%);
+  color: #f8fafc;
+  display: flex;
+  justify-content: center;
+  padding: 24px 14px 48px;
+  font-family: "Poppins", "Segoe UI", sans-serif;
+}
+
+.tp-stage {
+  width: min(980px, 100%);
+  display: grid;
+  gap: 16px;
+}
+
+.tp-topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(2, 6, 23, 0.85);
+  border: 1px solid rgba(148, 163, 184, 0.15);
+  padding: 14px 16px;
+  border-radius: 14px;
+  box-shadow: 0 12px 30px rgba(2, 6, 23, 0.6);
+}
+
+.tp-title {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.tp-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.tp-logo {
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  object-fit: cover;
+  border: 1px solid rgba(59, 130, 246, 0.4);
+  box-shadow: 0 10px 22px rgba(59, 130, 246, 0.3);
+}
+
+.tp-back {
+  background: #1e293b;
+  color: #f8fafc;
+  border: 1px solid rgba(248, 250, 252, 0.15);
+  border-radius: 10px;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.tp-status {
+  text-align: center;
+  padding: 10px 12px;
+  background: rgba(15, 23, 42, 0.8);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  border-radius: 12px;
+  font-size: 14px;
+}
+
+.tp-players {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 12px;
+}
+
+.tp-player {
+  background: linear-gradient(180deg, rgba(2, 6, 23, 0.9), rgba(15, 23, 42, 0.95));
+  border: 1px solid rgba(148, 163, 184, 0.12);
+  border-radius: 16px;
+  padding: 16px;
+  cursor: pointer;
+  transition: 0.2s ease;
+  text-align: center;
+}
+
+.tp-player.is-active {
+  border-color: rgba(59, 130, 246, 0.9);
+  box-shadow: 0 0 22px rgba(59, 130, 246, 0.35);
+  transform: translateY(-2px);
+}
+
+.tp-player-label {
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.tp-cards {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+.tp-card-img {
+  width: 54px;
+  height: 74px;
+  border-radius: 8px;
+  object-fit: cover;
+  border: 1px solid rgba(248, 250, 252, 0.15);
+  box-shadow: 0 8px 18px rgba(2, 6, 23, 0.5);
+  transition: transform 0.2s ease;
+}
+
+.tp-card-img.is-spinning {
+  animation: slotFlip 0.35s linear infinite;
+}
+
+.tp-vs {
+  font-weight: 800;
+  font-size: 18px;
+  color: #93c5fd;
+}
+
+.tp-bet-panel {
+  background: rgba(2, 6, 23, 0.85);
+  border: 1px solid rgba(148, 163, 184, 0.15);
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 0 16px 34px rgba(2, 6, 23, 0.6);
+}
+
+.tp-bet-title {
+  font-size: 13px;
+  color: #93c5fd;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin-bottom: 10px;
+}
+
+.tp-chips {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.tp-chip {
+  padding: 10px 0;
+  border-radius: 999px;
+  border: 1px solid rgba(59, 130, 246, 0.45);
+  background: rgba(15, 23, 42, 0.9);
+  color: #f8fafc;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.tp-chip.is-active {
+  background: linear-gradient(180deg, #60a5fa, #2563eb);
+  color: #020617;
+  box-shadow: 0 12px 24px rgba(59, 130, 246, 0.3);
+}
+
+.tp-bet-btn {
+  width: 100%;
+  padding: 12px 0;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(180deg, #f5c542, #c48d1d);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.tp-custom {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.tp-custom-label {
+  font-size: 12px;
+  color: rgba(248, 250, 252, 0.7);
+}
+
+.tp-custom-input {
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  background: rgba(15, 23, 42, 0.9);
+  color: #f8fafc;
+}
+
+.tp-result {
+  text-align: center;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px dashed rgba(148, 163, 184, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.tp-result.win {
+  color: #22c55e;
+}
+
+.tp-result.lose {
+  color: #ef4444;
+}
+
+.tp-result.is-animating {
+  animation: popGlow 0.8s ease;
+}
+
+.tp-result.is-animating::after {
+  content: "";
+  position: absolute;
+  inset: -40%;
+  background: radial-gradient(circle, rgba(96, 165, 250, 0.35), rgba(2, 6, 23, 0));
+  animation: sweep 1.2s ease;
+}
+
+@keyframes popGlow {
+  0% { transform: scale(0.96); box-shadow: 0 0 0 rgba(0,0,0,0); }
+  60% { transform: scale(1.03); box-shadow: 0 0 24px rgba(96, 165, 250, 0.45); }
+  100% { transform: scale(1); box-shadow: 0 0 0 rgba(0,0,0,0); }
+}
+
+@keyframes sweep {
+  0% { transform: translateX(-40%); opacity: 0; }
+  40% { opacity: 1; }
+  100% { transform: translateX(40%); opacity: 0; }
+}
+
+@keyframes slotFlip {
+  0% { transform: translateY(0); filter: blur(0); }
+  50% { transform: translateY(-4px); filter: blur(0.5px); }
+  100% { transform: translateY(0); filter: blur(0); }
+}
+
+.tp-next {
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  background: rgba(15, 23, 42, 0.8);
+  color: #f8fafc;
+  border-radius: 12px;
+  padding: 10px 0;
+  cursor: pointer;
+}
+
+@media (max-width: 720px) {
+  .tp-players {
+    grid-template-columns: 1fr;
+  }
+
+  .tp-vs {
+    text-align: center;
+  }
+
+  .tp-chips {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

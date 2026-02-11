@@ -1,24 +1,66 @@
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Login from "./pages/Login";
+import SuperAdmin from "./pages/SuperAdmin";
+import Admin from "./pages/Admin";
+import Client from "./pages/Client";
+import Customer from "./pages/Customer";
+import MatkaLayout from "./pages/matka/MatkaLayout";
+import ProtectedRoute from "./components/ProtectedRoute";
+
+
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Login />} />
+
+        <Route
+          path="/admin/*"
+          element={
+            <ProtectedRoute role="ADMIN">
+              <Admin />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/super-admin/*"
+          element={
+            <ProtectedRoute role="SUPER_ADMIN">
+              <SuperAdmin />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/client/*"
+          element={
+            <ProtectedRoute role="CLIENT">
+              <Client />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/customer/*"
+          element={
+            <ProtectedRoute role="CUSTOMER">
+              <Customer />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/matka/*"
+          element={
+            <ProtectedRoute role="CUSTOMER">
+              <MatkaLayout />
+            </ProtectedRoute>
+          }
+        />
+      </Routes>
+    </BrowserRouter>
   );
 }
 

@@ -1,0 +1,80 @@
+.pappu-container {
+  min-height: 100vh;
+  padding: 20px;
+  background: radial-gradient(circle at top, #1a1a1a, #000);
+  color: #fff;
+  text-align: center;
+  font-family: "Trebuchet MS", sans-serif;
+}
+
+/* TITLE */
+.pappu-container h2 {
+  color: gold;
+  text-shadow: 0 0 10px gold;
+  margin-bottom: 20px;
+}
+
+/* SYMBOL GRID */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin-bottom: 25px;
+}
+
+.card {
+  background: linear-gradient(145deg, #111, #222);
+  border: 2px solid #b8860b;
+  border-radius: 14px;
+  padding: 18px 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 0 8px rgba(255, 215, 0, 0.2);
+}
+
+.card:hover {
+  transform: scale(1.06);
+  box-shadow: 0 0 14px rgba(255, 215, 0, 0.6);
+}
+
+.card.active {
+  background: linear-gradient(145deg, gold, #ffcc00);
+  color: #000;
+  font-weight: bold;
+  box-shadow: 0 0 18px gold;
+}
+
+/* BET INPUT */
+input {
+  width: 70%;
+  padding: 12px;
+  font-size: 16px;
+  border-radius: 20px;
+  border: none;
+  outline: none;
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+/* BUTTONS */
+button {
+  padding: 12px 26px;
+  border-radius: 30px;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  background: linear-gradient(145deg, gold, #ffb700);
+  color: #000;
+  font-weight: bold;
+  box-shadow: 0 0 12px rgba(255, 215, 0, 0.7);
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* SCRATCH CARD */
+.scratch-wrapper {
+  margin-top: 25px;
+}

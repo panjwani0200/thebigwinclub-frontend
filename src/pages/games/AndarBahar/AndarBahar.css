@@ -1,0 +1,334 @@
+.ab-shell {
+  min-height: 100vh;
+  background: radial-gradient(1000px 600px at 20% -10%, #1b2a4a 0%, #0f172a 55%, #020617 100%);
+  color: #f8fafc;
+  display: flex;
+  justify-content: center;
+  padding: 24px 14px 48px;
+  font-family: "Poppins", "Segoe UI", sans-serif;
+}
+
+.ab-stage {
+  width: min(1000px, 100%);
+  display: grid;
+  gap: 16px;
+}
+
+.ab-topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(2, 6, 23, 0.85);
+  border: 1px solid rgba(148, 163, 184, 0.15);
+  padding: 14px 16px;
+  border-radius: 14px;
+  box-shadow: 0 12px 30px rgba(2, 6, 23, 0.6);
+}
+
+.ab-title {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.ab-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.ab-logo {
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  object-fit: cover;
+  border: 1px solid rgba(245, 197, 66, 0.5);
+  box-shadow: 0 10px 22px rgba(245, 197, 66, 0.35);
+}
+
+.ab-back {
+  background: #1e293b;
+  color: #f8fafc;
+  border: 1px solid rgba(248, 250, 252, 0.15);
+  border-radius: 10px;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.ab-joker {
+  background: rgba(2, 6, 23, 0.8);
+  border: 1px solid rgba(245, 197, 66, 0.3);
+  border-radius: 14px;
+  padding: 12px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.ab-joker::after {
+  content: "";
+  position: absolute;
+  inset: -40%;
+  background: radial-gradient(circle, rgba(245, 197, 66, 0.15), transparent 60%);
+  animation: abGlow 3s ease-in-out infinite;
+}
+
+.ab-joker-label {
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  color: #f5c542;
+  margin-bottom: 8px;
+}
+
+.ab-joker-img {
+  width: 90px;
+  height: 130px;
+  object-fit: cover;
+  border-radius: 10px;
+  border: 1px solid rgba(248, 250, 252, 0.2);
+  box-shadow: 0 10px 24px rgba(245, 197, 66, 0.4);
+}
+
+.ab-joker-code {
+  margin-top: 6px;
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+.ab-status {
+  text-align: center;
+  padding: 10px 12px;
+  background: rgba(15, 23, 42, 0.8);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  border-radius: 12px;
+  font-size: 14px;
+}
+
+.ab-sides {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.ab-side {
+  background: linear-gradient(180deg, rgba(2, 6, 23, 0.9), rgba(15, 23, 42, 0.95));
+  border: 1px solid rgba(148, 163, 184, 0.12);
+  border-radius: 16px;
+  padding: 16px;
+  cursor: pointer;
+  transition: 0.2s ease;
+  text-align: left;
+}
+
+.ab-side.is-active {
+  border-color: rgba(59, 130, 246, 0.9);
+  box-shadow: 0 0 22px rgba(59, 130, 246, 0.35);
+  transform: translateY(-2px);
+}
+
+.ab-side.is-active .ab-side-title {
+  color: #93c5fd;
+}
+
+.ab-side-title {
+  font-weight: 700;
+  margin-bottom: 6px;
+  color: #f8fafc;
+}
+
+.ab-odds {
+  font-size: 12px;
+  opacity: 1;
+  color: rgba(248, 250, 252, 0.75);
+  margin-bottom: 10px;
+}
+
+.ab-side.is-active .ab-odds {
+  color: rgba(147, 197, 253, 0.9);
+}
+
+.ab-cards {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.ab-card-slot {
+  width: 50px;
+  height: 72px;
+  border-radius: 8px;
+  border: 1px dashed rgba(148, 163, 184, 0.4);
+  background: linear-gradient(180deg, rgba(2, 6, 23, 0.6), rgba(15, 23, 42, 0.8));
+}
+
+.ab-card {
+  width: 50px;
+  height: 72px;
+  border-radius: 8px;
+  object-fit: cover;
+  border: 1px solid rgba(248, 250, 252, 0.15);
+  box-shadow: 0 8px 18px rgba(2, 6, 23, 0.5);
+  opacity: 0;
+  transform: translateY(-10px) scale(0.98);
+  animation: dealIn 0.45s ease forwards;
+  animation-delay: var(--deal-delay, 0ms);
+}
+
+.ab-bet-panel {
+  background: rgba(2, 6, 23, 0.85);
+  border: 1px solid rgba(148, 163, 184, 0.15);
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 0 16px 34px rgba(2, 6, 23, 0.6);
+}
+
+.ab-bet-title {
+  font-size: 13px;
+  color: #93c5fd;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin-bottom: 10px;
+}
+
+.ab-chips {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.ab-chip {
+  padding: 10px 0;
+  border-radius: 999px;
+  border: 1px solid rgba(59, 130, 246, 0.45);
+  background: rgba(15, 23, 42, 0.9);
+  color: #f8fafc;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.ab-chip.is-active {
+  background: linear-gradient(180deg, #60a5fa, #2563eb);
+  color: #020617;
+  box-shadow: 0 12px 24px rgba(59, 130, 246, 0.3);
+}
+
+.ab-bet-btn {
+  width: 100%;
+  padding: 12px 0;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(180deg, #f5c542, #c48d1d);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.ab-custom {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.ab-custom-label {
+  font-size: 12px;
+  color: rgba(248, 250, 252, 0.7);
+}
+
+.ab-custom-input {
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  background: rgba(15, 23, 42, 0.9);
+  color: #f8fafc;
+}
+
+.ab-result {
+  text-align: center;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px dashed rgba(148, 163, 184, 0.3);
+}
+
+.ab-result.is-declaring {
+  color: #f5c542;
+  border-color: rgba(245, 197, 66, 0.65);
+  animation: declarePulse 1.3s ease-in-out infinite;
+}
+
+.ab-result.andar {
+  color: #60a5fa;
+}
+
+.ab-result.bahar {
+  color: #ef4444;
+}
+
+.ab-history {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  padding: 6px 2px;
+}
+
+.ab-history::-webkit-scrollbar {
+  height: 6px;
+}
+
+.ab-history::-webkit-scrollbar-thumb {
+  background: rgba(96, 165, 250, 0.4);
+  border-radius: 999px;
+}
+
+.ab-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 999px;
+  background: #1e293b;
+  border: 1px solid rgba(148, 163, 184, 0.3);
+}
+
+.ab-dot.andar {
+  background: #60a5fa;
+}
+
+.ab-dot.bahar {
+  background: #ef4444;
+}
+
+@media (max-width: 720px) {
+  .ab-sides {
+    grid-template-columns: 1fr;
+  }
+
+  .ab-chips {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@keyframes dealIn {
+  0% { opacity: 0; transform: translateY(-12px) scale(0.98); }
+  70% { opacity: 1; transform: translateY(2px) scale(1.02); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes abGlow {
+  0% { transform: translateX(-10%); opacity: 0.3; }
+  50% { transform: translateX(10%); opacity: 0.6; }
+  100% { transform: translateX(-10%); opacity: 0.3; }
+}
+
+@keyframes declarePulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(245, 197, 66, 0.35);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 0 0 10px rgba(245, 197, 66, 0);
+    transform: scale(1.01);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(245, 197, 66, 0);
+    transform: scale(1);
+  }
+}

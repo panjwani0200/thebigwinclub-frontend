@@ -1,0 +1,62 @@
+/* MOBILE FIRST */
+.pappu-container {
+  padding: 14px;
+  background: radial-gradient(circle at top, #1a1a1a, #000);
+  min-height: 100vh;
+  color: #fff;
+  text-align: center;
+}
+
+/* TITLE */
+.pappu-container h2 {
+  font-size: 20px;
+  margin-bottom: 14px;
+  color: gold;
+  text-shadow: 0 0 8px gold;
+}
+
+/* GRID – MOBILE */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 🔥 3 per row for phone */
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.card {
+  padding: 14px 6px;
+  border-radius: 12px;
+  font-size: 14px;
+  background: linear-gradient(145deg, #111, #222);
+  border: 2px solid #b8860b;
+  box-shadow: 0 0 6px rgba(255, 215, 0, 0.3);
+}
+
+.card.active {
+  background: linear-gradient(145deg, gold, #ffcc00);
+  color: #000;
+  box-shadow: 0 0 14px gold;
+}
+
+/* BET INPUT */
+input {
+  width: 90%;
+  padding: 12px;
+  font-size: 16px;
+  border-radius: 20px;
+  margin-bottom: 12px;
+}
+
+/* BUTTONS – BIG TAP AREA */
+button {
+  width: 44%;
+  padding: 12px;
+  font-size: 15px;
+  border-radius: 30px;
+}
+
+/* SCRATCH CARD MOBILE */
+.scratch-wrapper {
+  width: 90%;
+  margin: 20px auto;
+}
