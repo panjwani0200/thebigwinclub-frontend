@@ -1,6 +1,25 @@
 import axios from "axios";
 
-const baseURL = import.meta.env.VITE_API_BASE_URL || "http://localhost:3000";
+const envBaseURL =
+  import.meta.env.VITE_API_BASE_URL ||
+  import.meta.env.VITE_API_URL ||
+  "http://localhost:3000";
+
+const normalizeBaseURL = (rawUrl) => {
+  const value = String(rawUrl || "").trim();
+  if (!value) return "http://localhost:3000";
+
+  // Keep origin only. If someone sets /api or /api/auth in env,
+  // requests like /api/auth/login will otherwise duplicate segments.
+  try {
+    const parsed = new URL(value);
+    return parsed.origin.replace(/\/+$/, "");
+  } catch {
+    return value.replace(/\/+$/, "");
+  }
+};
+
+const baseURL = normalizeBaseURL(envBaseURL);
 
 const api = axios.create({
   baseURL,

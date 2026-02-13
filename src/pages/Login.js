@@ -91,8 +91,13 @@ export default function Login() {
       else if (res.data.role === "CLIENT") navigate("/client");
       else if (res.data.role === "CUSTOMER") navigate("/customer");
       else setError("Invalid role configuration");
-    } catch {
-      setError("Invalid username or password");
+    } catch (err) {
+      const status = err?.response?.status;
+      if (status === 401) {
+        setError("Invalid username or password");
+      } else {
+        setError(err?.friendlyMessage || "Login failed. Please try again.");
+      }
     } finally {
       setLoading(false);
     }
