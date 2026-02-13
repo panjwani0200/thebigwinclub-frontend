@@ -1,9 +1,10 @@
 import axios from "axios";
 
-const envBaseURL =
-  import.meta.env.VITE_API_BASE_URL ||
-  import.meta.env.VITE_API_URL ||
-  "http://localhost:3000";
+const isProd = import.meta.env.PROD;
+const envBaseURL = import.meta.env.VITE_API_BASE_URL || import.meta.env.VITE_API_URL;
+const fallbackBaseURL = isProd
+  ? "https://thebigwinclub-backend.onrender.com"
+  : "http://localhost:3000";
 
 const normalizeBaseURL = (rawUrl) => {
   const value = String(rawUrl || "").trim();
@@ -19,7 +20,7 @@ const normalizeBaseURL = (rawUrl) => {
   }
 };
 
-const baseURL = normalizeBaseURL(envBaseURL);
+const baseURL = normalizeBaseURL(envBaseURL || fallbackBaseURL);
 
 const api = axios.create({
   baseURL,
