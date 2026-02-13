@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const isProd = import.meta.env.PROD;
-const envBaseURL = import.meta.env.VITE_API_BASE_URL || import.meta.env.VITE_API_URL;
+const envBaseURL = import.meta.env.VITE_API_URL || import.meta.env.VITE_API_BASE_URL;
 const fallbackBaseURL = isProd
   ? "https://thebigwinclub-backend.onrender.com"
   : "http://localhost:3000";
