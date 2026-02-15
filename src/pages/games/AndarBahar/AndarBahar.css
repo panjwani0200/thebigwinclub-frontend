@@ -1,17 +1,22 @@
 .ab-shell {
   min-height: 100vh;
+  width: 100%;
+  max-width: 100%;
   background: radial-gradient(1000px 600px at 20% -10%, #1b2a4a 0%, #0f172a 55%, #020617 100%);
   color: #f8fafc;
   display: flex;
   justify-content: center;
   padding: 24px 14px 48px;
+  overflow-x: clip;
   font-family: "Poppins", "Segoe UI", sans-serif;
 }
 
 .ab-stage {
-  width: min(1000px, 100%);
+  width: 100%;
+  max-width: 1000px;
   display: grid;
   gap: 16px;
+  min-width: 0;
 }
 
 .ab-topbar {
@@ -107,6 +112,7 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 12px;
+  min-width: 0;
 }
 
 .ab-side {
@@ -117,6 +123,7 @@
   cursor: pointer;
   transition: 0.2s ease;
   text-align: left;
+  min-width: 0;
 }
 
 .ab-side.is-active {
@@ -150,6 +157,8 @@
   display: flex;
   gap: 8px;
   flex-wrap: wrap;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .ab-card-slot {
@@ -179,6 +188,7 @@
   border-radius: 16px;
   padding: 16px;
   box-shadow: 0 16px 34px rgba(2, 6, 23, 0.6);
+  min-width: 0;
 }
 
 .ab-bet-title {
@@ -194,6 +204,7 @@
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 10px;
   margin-bottom: 14px;
+  min-width: 0;
 }
 
 .ab-chip {
@@ -297,12 +308,26 @@
 }
 
 @media (max-width: 720px) {
+  .ab-shell {
+    padding: 12px 0 22px;
+  }
+
+  .ab-stage {
+    max-width: 100%;
+  }
+
   .ab-sides {
     grid-template-columns: 1fr;
   }
 
   .ab-chips {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .ab-card,
+  .ab-card-slot {
+    width: 46px;
+    height: 64px;
   }
 }
 

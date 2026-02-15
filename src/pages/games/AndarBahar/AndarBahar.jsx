@@ -2,6 +2,7 @@
 import api from "../../../services/api";
 import "./AndarBahar.css";
 import InlineBetHistory from "../../../components/customer/InlineBetHistory";
+import BetOutcomePopup from "../../../components/customer/BetOutcomePopup";
 
 export default function AndarBahar({ onBack }) {
   const [roundId, setRoundId] = useState(null);
@@ -15,6 +16,13 @@ export default function AndarBahar({ onBack }) {
   const [declaring, setDeclaring] = useState(false);
   const [dealt, setDealt] = useState({ andar: null, bahar: null });
   const [history, setHistory] = useState([]);
+  const [betSnapshot, setBetSnapshot] = useState(null);
+  const [outcomePopup, setOutcomePopup] = useState({
+    open: false,
+    result: null,
+    amount: 0,
+    payout: 0,
+  });
 
   const cardToPath = (code) => {
     if (!code) return "";
@@ -71,8 +79,8 @@ export default function AndarBahar({ onBack }) {
   const placeBet = async () => {
     if (!selected) return setStatus("Select Andar or Bahar");
     if (!roundId) return setStatus("Round not ready");
-    if (!Number.isFinite(Number(amount)) || Number(amount) < 50) {
-      return setStatus("Minimum bet is ₹50");
+    if (!Number.isFinite(Number(amount)) || Number(amount) < 20) {
+      return setStatus("Minimum bet is ₹20");
     }
     try {
       setLoading(true);
@@ -82,6 +90,7 @@ export default function AndarBahar({ onBack }) {
         side: selected,
         amount,
       });
+      setBetSnapshot({ side: selected, amount: Number(amount) });
       setPolling(true);
     } catch (err) {
       setStatus(err.response?.data?.message || "Bet failed");
@@ -96,6 +105,11 @@ export default function AndarBahar({ onBack }) {
       try {
         const res = await api.get(`/api/game/andarbahar/round/${roundId}`);
         if (res.data.status === "CLOSED") {
+          const betSide = betSnapshot?.side || selected;
+          const betAmount = Number(betSnapshot?.amount || amount);
+          const isWin = res.data.winner === betSide;
+          const payout = isWin ? Number((betAmount * 1.98).toFixed(2)) : 0;
+
           setPolling(false);
           setDeclaring(true);
           setStatus("Declaring result...");
@@ -111,6 +125,12 @@ export default function AndarBahar({ onBack }) {
             setDeclaring(false);
             setResult(res.data.winner);
             setStatus(res.data.winner === "ANDAR" ? "Andar Wins" : "Bahar Wins");
+            setOutcomePopup({
+              open: true,
+              result: isWin ? "WIN" : "LOSE",
+              amount: betAmount,
+              payout,
+            });
           }, 1300);
 
           setTimeout(async () => {
@@ -122,6 +142,7 @@ export default function AndarBahar({ onBack }) {
             setSelected(null);
             setDeclaring(false);
             setDealt({ andar: null, bahar: null });
+            setBetSnapshot(null);
           }, 2200);
         }
       } catch {
@@ -129,7 +150,7 @@ export default function AndarBahar({ onBack }) {
       }
     }, 1000);
     return () => clearInterval(interval);
-  }, [polling, roundId]);
+  }, [polling, roundId, selected, amount, betSnapshot]);
 
   return (
     <div className="ab-shell">
@@ -201,7 +222,7 @@ export default function AndarBahar({ onBack }) {
         <div className="ab-bet-panel">
           <div className="ab-bet-title">Bet Amount</div>
           <div className="ab-chips">
-            {[100, 500, 1000, 5000].map((v) => (
+            {[20, 100, 500, 1000, 5000].map((v) => (
               <button
                 key={v}
                 className={`ab-chip ${amount === v ? "is-active" : ""}`}
@@ -214,12 +235,12 @@ export default function AndarBahar({ onBack }) {
             ))}
           </div>
           <div className="ab-custom">
-            <label className="ab-custom-label">Min bet: {"\u20B9"}50</label>
+            <label className="ab-custom-label">Min bet: {"\u20B9"}20</label>
             <label className="ab-custom-label">Custom Amount</label>
             <input
               className="ab-custom-input"
               type="number"
-              min="50"
+              min="20"
               placeholder="Enter amount"
               value={amount}
               onChange={(e) => setAmount(Number(e.target.value))}
@@ -251,6 +272,14 @@ export default function AndarBahar({ onBack }) {
           refreshKey={`${result || ""}-${roundId || ""}`}
         />
       </div>
+      <BetOutcomePopup
+        open={outcomePopup.open}
+        result={outcomePopup.result}
+        amount={outcomePopup.amount}
+        payout={outcomePopup.payout}
+        gameName="Andar Bahar"
+        onClose={() => setOutcomePopup((prev) => ({ ...prev, open: false }))}
+      />
     </div>
   );
 }

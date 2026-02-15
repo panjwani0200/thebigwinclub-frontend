@@ -54,8 +54,8 @@ export default function InlineBetHistory({
       ) : null}
 
       {!loading && bets.length > 0 ? (
-        <div className="casino-table-wrap">
-          <table>
+        <div className="casino-table-wrap casino-inline-table-wrap">
+          <table className="casino-inline-table">
             <thead>
               <tr>
                 <th>Round</th>

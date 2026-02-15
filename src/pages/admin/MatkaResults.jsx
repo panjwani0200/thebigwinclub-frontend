@@ -75,6 +75,23 @@ export default function MatkaResults() {
     }
   };
 
+  const updateSession = async (sessionType, action) => {
+    if (!selected) return;
+    try {
+      setLoading(true);
+      setError("");
+      setMessage("");
+      await api.post(`/api/admin/matka/markets/${selected}/session/${sessionType}/${action}`);
+      setMessage(`${sessionType.toUpperCase()} session ${action === "open" ? "opened" : "closed"}.`);
+      await loadMarkets();
+    } catch (err) {
+      console.error("MATKA SESSION UPDATE ERROR:", err);
+      setError(err.response?.data?.message || "Failed to update session");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <section>
       <h2 className="casino-section-title">Matka Results</h2>
@@ -108,6 +125,21 @@ export default function MatkaResults() {
         </button>
       </div>
 
+      <div className="casino-actions mt-2">
+        <button className="casino-btn-ghost" onClick={() => updateSession("open", "open")} disabled={loading}>
+          Open Panel: Open
+        </button>
+        <button className="casino-btn-danger" onClick={() => updateSession("open", "close")} disabled={loading}>
+          Open Panel: Close
+        </button>
+        <button className="casino-btn-ghost" onClick={() => updateSession("close", "open")} disabled={loading}>
+          Close Panel: Open
+        </button>
+        <button className="casino-btn-danger" onClick={() => updateSession("close", "close")} disabled={loading}>
+          Close Panel: Close
+        </button>
+      </div>
+
       {message ? <div className="casino-alert success">{message}</div> : null}
       {error ? <div className="casino-alert error">{error}</div> : null}
 
@@ -124,6 +156,9 @@ export default function MatkaResults() {
               <span className={`casino-badge ${m.status === "running" ? "success" : "error"}`}>
                 {m.status}
               </span>
+              <div className="mt-2 text-xs text-slate-400">
+                OPEN: {(m.openSessionStatus || "running").toUpperCase()} | CLOSE: {(m.closeSessionStatus || "running").toUpperCase()}
+              </div>
               <div className="mt-2 text-sm font-bold">{m.result || "-"}</div>
             </div>
           </article>

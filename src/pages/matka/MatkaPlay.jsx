@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import api from "../../services/api";
 
@@ -38,7 +38,7 @@ const DOUBLE_PATTI_GROUPS = [
 
 const TRIPLE_PATTI_LIST = ["000", "111", "222", "333", "444", "555", "666", "777", "888", "999"];
 const JODI_LIST = Array.from({ length: 100 }, (_, i) => String(i).padStart(2, "0"));
-const BET_AMOUNTS = [50, 100, 500, 1000, 5000];
+const BET_AMOUNTS = [20, 50, 100, 500, 1000, 5000];
 
 export default function MatkaPlay() {
   const { marketId } = useParams();
@@ -54,7 +54,19 @@ export default function MatkaPlay() {
   const [betType, setBetType] = useState(null);
   const [session, setSession] = useState("OPEN");
   const [number, setNumber] = useState("");
+  const [selectedNumbers, setSelectedNumbers] = useState([]);
+  const [singleAnkAmounts, setSingleAnkAmounts] = useState({});
+  const [singleAnkQuickAmount, setSingleAnkQuickAmount] = useState("20");
   const [amount, setAmount] = useState("100");
+
+  const singleAnkTotal = useMemo(
+    () =>
+      Array.from({ length: 10 }, (_, i) => Number(singleAnkAmounts[String(i)] || 0)).reduce(
+        (sum, n) => sum + (Number.isFinite(n) ? n : 0),
+        0
+      ),
+    [singleAnkAmounts]
+  );
 
   const load = async () => {
     try {
@@ -82,27 +94,71 @@ export default function MatkaPlay() {
     setBetType(type);
     setSession("OPEN");
     setNumber("");
+    setSelectedNumbers([]);
+    setSingleAnkAmounts({});
+    setSingleAnkQuickAmount("20");
     setAmount("100");
     setMessage("");
     setError("");
     setModalOpen(true);
   };
 
+  const toggleNumber = (value) => {
+    setSelectedNumbers((prev) =>
+      prev.includes(value) ? prev.filter((n) => n !== value) : [...prev, value]
+    );
+  };
+
   const placeBet = async () => {
-    if (!Number.isFinite(Number(amount)) || Number(amount) < 50) {
-      setError("Minimum bet is ₹50");
-      return;
-    }
     try {
       setError("");
       setMessage("");
-      await api.post("/api/matka/bet", {
-        marketId,
-        betType: betType.key,
-        session,
-        number,
-        amount: Number(amount),
-      });
+
+      let payload = { marketId };
+
+      if (betType.key === "SINGLE_ANK") {
+        const betsToPlace = Array.from({ length: 10 }, (_, idx) => String(idx))
+          .map((digit) => ({
+            marketId,
+            betType: "SINGLE_ANK",
+            session,
+            number: digit,
+            amount: Number(singleAnkAmounts[digit]),
+          }))
+          .filter((b) => Number.isFinite(b.amount) && b.amount >= 20);
+
+        if (!betsToPlace.length) {
+          setError("Enter at least one valid amount (min \u20B920) in Single Ank panel");
+          return;
+        }
+
+        payload = { bets: betsToPlace };
+      } else {
+        if (!Number.isFinite(Number(amount)) || Number(amount) < 20) {
+          setError("Minimum bet is \u20B920");
+          return;
+        }
+
+        const finalSelection =
+          selectedNumbers.length > 0 ? selectedNumbers : number ? [number] : [];
+
+        if (!finalSelection.length) {
+          setError("Select at least one number");
+          return;
+        }
+
+        payload = {
+          bets: finalSelection.map((n) => ({
+            marketId,
+            betType: betType.key,
+            session,
+            number: n,
+            amount: Number(amount),
+          })),
+        };
+      }
+
+      await api.post("/api/matka/bet", payload);
       setModalOpen(false);
       await load();
       setMessage("Bet placed successfully.");
@@ -123,8 +179,8 @@ export default function MatkaPlay() {
             {JODI_LIST.map((n) => (
               <button
                 key={n}
-                className={`matka-patti-btn ${number === n ? "active" : ""}`}
-                onClick={() => setNumber(n)}
+                className={`matka-patti-btn ${selectedNumbers.includes(n) ? "active" : ""}`}
+                onClick={() => toggleNumber(n)}
                 type="button"
               >
                 {n}
@@ -143,8 +199,8 @@ export default function MatkaPlay() {
             {TRIPLE_PATTI_LIST.map((n) => (
               <button
                 key={n}
-                className={`matka-patti-btn ${number === n ? "active" : ""}`}
-                onClick={() => setNumber(n)}
+                className={`matka-patti-btn ${selectedNumbers.includes(n) ? "active" : ""}`}
+                onClick={() => toggleNumber(n)}
                 type="button"
               >
                 {n}
@@ -164,8 +220,8 @@ export default function MatkaPlay() {
             {g.list.map((n) => (
               <button
                 key={n}
-                className={`matka-patti-btn ${number === n ? "active" : ""}`}
-                onClick={() => setNumber(n)}
+                className={`matka-patti-btn ${selectedNumbers.includes(n) ? "active" : ""}`}
+                onClick={() => toggleNumber(n)}
                 type="button"
               >
                 {n}
@@ -195,7 +251,7 @@ export default function MatkaPlay() {
         <div>
           <h2 className="casino-section-title">{market.name} - Betting Dashboard</h2>
           <p className="casino-section-sub">
-            Status: {market.status === "running" ? "Betting Running" : "Betting Closed"}
+            Status: {market.status === "running" ? "Betting Running" : "Betting Closed"} | OPEN Panel: {(market.openSessionStatus || "running").toUpperCase()} | CLOSE Panel: {(market.closeSessionStatus || "running").toUpperCase()}
           </p>
         </div>
         <button className="matka-btn" onClick={() => navigate("/matka")}>
@@ -277,42 +333,106 @@ export default function MatkaPlay() {
               <option value="CLOSE">Close</option>
             </select>
 
-            <label className="block mt-3 text-sm">Number</label>
-            {(betType.key === "SINGLE_PATTI" ||
-              betType.key === "DOUBLE_PATTI" ||
-              betType.key === "TRIPLE_PATTI" ||
-              betType.key === "JODI") ? (
-              <div className="matka-patti">{renderDigitPicker()}</div>
-            ) : (
-              renderDigitPicker()
-            )}
+            {betType.key === "SINGLE_ANK" ? (
+              <div className="matka-single-ank-panel">
+                <label className="block mt-3 text-sm">Select Amount</label>
+                <div className="casino-actions mt-1 mb-2">
+                  {BET_AMOUNTS.map((chip) => (
+                    <button
+                      key={chip}
+                      className={String(chip) === String(singleAnkQuickAmount) ? "" : "casino-btn-ghost"}
+                      type="button"
+                      onClick={() => setSingleAnkQuickAmount(String(chip))}
+                    >
+                      {"\u20B9"}{chip}
+                    </button>
+                  ))}
+                </div>
 
-            <label className="block mt-3 text-sm">Amount</label>
-            <label className="block mt-1 text-xs text-slate-400">Min bet: {"\u20B9"}50</label>
-            <div className="casino-actions mt-1 mb-2">
-              {BET_AMOUNTS.map((chip) => (
-                <button
-                  key={chip}
-                  className={String(chip) === String(amount) ? "" : "casino-btn-ghost"}
-                  type="button"
-                  onClick={() => setAmount(String(chip))}
-                >
-                  {"\u20B9"}{chip}
-                </button>
-              ))}
-            </div>
-            <input
-              className="matka-input"
-              type="number"
-              min="50"
-              value={amount}
-              onChange={(e) => setAmount(e.target.value)}
-              placeholder="Enter amount"
-            />
+                <label className="block mt-3 text-sm">Select Digits</label>
+                <div className="matka-single-ank-grid">
+                  {Array.from({ length: 10 }, (_, i) => String(i)).map((digit) => (
+                    <div key={digit} className="matka-single-ank-cell">
+                      <button
+                        type="button"
+                        className="matka-patti-btn"
+                        onClick={() =>
+                          setSingleAnkAmounts((prev) => ({
+                            ...prev,
+                            [digit]: singleAnkQuickAmount,
+                          }))
+                        }
+                      >
+                        {digit}
+                      </button>
+                      <input
+                        className="matka-input"
+                        type="number"
+                        min="0"
+                        value={singleAnkAmounts[digit] || ""}
+                        onChange={(e) =>
+                          setSingleAnkAmounts((prev) => ({ ...prev, [digit]: e.target.value }))
+                        }
+                        placeholder="Amount"
+                      />
+                    </div>
+                  ))}
+                </div>
+
+                <div className="text-sm mt-2">Total Points: {"\u20B9"}{singleAnkTotal}</div>
+              </div>
+            ) : (
+              <>
+                <label className="block mt-3 text-sm">Number</label>
+                {(betType.key === "SINGLE_PATTI" ||
+                  betType.key === "DOUBLE_PATTI" ||
+                  betType.key === "TRIPLE_PATTI" ||
+                  betType.key === "JODI") ? (
+                  <div className="matka-patti">{renderDigitPicker()}</div>
+                ) : (
+                  renderDigitPicker()
+                )}
+
+                <div className="text-xs text-slate-400 mt-2">Selected numbers: {selectedNumbers.length}</div>
+
+                <label className="block mt-3 text-sm">Amount</label>
+                <label className="block mt-1 text-xs text-slate-400">Min bet: {"\u20B9"}20</label>
+                <div className="casino-actions mt-1 mb-2">
+                  {BET_AMOUNTS.map((chip) => (
+                    <button
+                      key={chip}
+                      className={String(chip) === String(amount) ? "" : "casino-btn-ghost"}
+                      type="button"
+                      onClick={() => setAmount(String(chip))}
+                    >
+                      {"\u20B9"}{chip}
+                    </button>
+                  ))}
+                </div>
+                <input
+                  className="matka-input"
+                  type="number"
+                  min="20"
+                  value={amount}
+                  onChange={(e) => setAmount(e.target.value)}
+                  placeholder="Enter amount"
+                />
+              </>
+            )}
 
             <div className="matka-actions">
               <button className="matka-cta" onClick={placeBet}>Place Bet</button>
               <button className="matka-btn" onClick={() => setModalOpen(false)}>Cancel</button>
+              <button
+                className="matka-btn"
+                onClick={() => {
+                  setNumber("");
+                  setSelectedNumbers([]);
+                  setSingleAnkAmounts({});
+                }}
+              >
+                Reset
+              </button>
             </div>
           </div>
         </div>

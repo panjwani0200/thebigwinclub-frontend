@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import api from "../../../services/api";
 import "./TeenPattiAB.css";
 import InlineBetHistory from "../../../components/customer/InlineBetHistory";
+import BetOutcomePopup from "../../../components/customer/BetOutcomePopup";
 
 export default function TeenPattiAB({ onBack }) {
   const [selectedSide, setSelectedSide] = useState(null); // "A" | "B"
@@ -15,6 +16,13 @@ export default function TeenPattiAB({ onBack }) {
   const [spinning, setSpinning] = useState(false);
   const [aCards, setACards] = useState([0, 1, 2]);
   const [bCards, setBCards] = useState([3, 4, 5]);
+  const [betSnapshot, setBetSnapshot] = useState(null);
+  const [outcomePopup, setOutcomePopup] = useState({
+    open: false,
+    result: null,
+    amount: 0,
+    payout: 0,
+  });
 
   const cardPool = useMemo(
     () => [
@@ -51,8 +59,8 @@ export default function TeenPattiAB({ onBack }) {
       setStatus("Round not ready. Try again.");
       return;
     }
-    if (!Number.isFinite(Number(amount)) || Number(amount) < 50) {
-      setStatus("Minimum bet is \u20B950");
+    if (!Number.isFinite(Number(amount)) || Number(amount) < 20) {
+      setStatus("Minimum bet is \u20B920");
       return;
     }
 
@@ -68,6 +76,7 @@ export default function TeenPattiAB({ onBack }) {
         amount,
       });
 
+      setBetSnapshot({ side: selectedSide, amount: Number(amount) });
       setPolling(true);
     } catch (err) {
       setStatus(err.response?.data?.message || "Bet failed");
@@ -82,6 +91,7 @@ export default function TeenPattiAB({ onBack }) {
     setStatus("Place your bet");
     setPolling(false);
     setRoundId(null);
+    setBetSnapshot(null);
     api.post("/api/game/teenpatti-ab/start").then((res) => {
       setRoundId(res.data.roundId);
     });
@@ -93,10 +103,19 @@ export default function TeenPattiAB({ onBack }) {
       try {
         const res = await api.get(`/api/game/teenpatti-ab/round/${roundId}`);
         if (res.data.status === "CLOSED") {
-          const win = res.data.winner === selectedSide;
+          const betSide = betSnapshot?.side || selectedSide;
+          const betAmount = Number(betSnapshot?.amount || amount);
+          const win = res.data.winner === betSide;
           const gameResult = win ? "WIN" : "LOSE";
+          const payout = win ? Number((betAmount * 1.98).toFixed(2)) : 0;
           setResult(gameResult);
           setStatus(gameResult === "WIN" ? "You Won" : "You Lost");
+          setOutcomePopup({
+            open: true,
+            result: gameResult,
+            amount: betAmount,
+            payout,
+          });
           setPolling(false);
           setSpinning(false);
           setAnimating(true);
@@ -108,7 +127,7 @@ export default function TeenPattiAB({ onBack }) {
       }
     }, 1000);
     return () => clearInterval(interval);
-  }, [polling, roundId, selectedSide]);
+  }, [polling, roundId, selectedSide, amount, betSnapshot]);
 
   useEffect(() => {
     if (!spinning) return;
@@ -181,7 +200,7 @@ export default function TeenPattiAB({ onBack }) {
         <div className="tp-bet-panel">
           <div className="tp-bet-title">Bet Amount</div>
           <div className="tp-chips">
-            {[100, 500, 1000, 5000].map((v) => (
+            {[20, 100, 500, 1000, 5000].map((v) => (
               <button
                 key={v}
                 className={`tp-chip ${amount === v ? "is-active" : ""}`}
@@ -192,12 +211,12 @@ export default function TeenPattiAB({ onBack }) {
             ))}
           </div>
           <div className="tp-custom">
-            <label className="tp-custom-label">Min bet: {"\u20B9"}50</label>
+            <label className="tp-custom-label">Min bet: {"\u20B9"}20</label>
             <label className="tp-custom-label">Custom Amount</label>
             <input
               className="tp-custom-input"
               type="number"
-              min="50"
+              min="20"
               placeholder="Enter amount"
               value={amount}
               onChange={(e) => setAmount(Number(e.target.value))}
@@ -231,6 +250,14 @@ export default function TeenPattiAB({ onBack }) {
           refreshKey={`${result || ""}-${roundId || ""}`}
         />
       </div>
+      <BetOutcomePopup
+        open={outcomePopup.open}
+        result={outcomePopup.result}
+        amount={outcomePopup.amount}
+        payout={outcomePopup.payout}
+        gameName="20-20 Live Teen Patti"
+        onClose={() => setOutcomePopup((prev) => ({ ...prev, open: false }))}
+      />
     </div>
   );
 }

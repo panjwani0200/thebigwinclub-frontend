@@ -3,27 +3,38 @@ import api from "../../../services/api";
 import "./PappuPlayingPictures.css";
 import { PAPPU_SYMBOLS } from "../../../data/pappuSymbols";
 import InlineBetHistory from "../../../components/customer/InlineBetHistory";
+import BetOutcomePopup from "../../../components/customer/BetOutcomePopup";
 
 export default function PappuPlayingPictures({ onBack }) {
-  const [selected, setSelected] = useState(null);
-  const [amount, setAmount] = useState(50);
+  const [selected, setSelected] = useState([]);
+  const [amount, setAmount] = useState(20);
   const [roundId, setRoundId] = useState(null);
   const [status, setStatus] = useState("Select a picture to begin.");
   const [result, setResult] = useState(null);
   const [pendingResult, setPendingResult] = useState(null);
+  const [resultSymbol, setResultSymbol] = useState(null);
   const [scratchActive, setScratchActive] = useState(false);
   const [autoReveal, setAutoReveal] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [pendingPayout, setPendingPayout] = useState(0);
+  const [pendingStake, setPendingStake] = useState(0);
+  const [outcomePopup, setOutcomePopup] = useState({
+    open: false,
+    result: null,
+    amount: 0,
+    payout: 0,
+  });
   const { playScratch, playWin, playLose } = useScratchSounds();
 
   // Start a new round (UI drives the state; backend handles RNG)
   const startRound = async () => {
     try {
       setLoading(true);
-      setSelected(null);
+      setSelected([]);
       setResult(null);
+      setResultSymbol(null);
       setRoundId(null);
-      setStatus("Round started. Pick one picture.");
+      setStatus("Round started. Pick up to 5 pictures.");
 
       const res = await api.post("/api/game/pappu/start");
       setRoundId(res.data.roundId);
@@ -38,9 +49,10 @@ export default function PappuPlayingPictures({ onBack }) {
   // Place bet on the selected picture
   const placeBet = async () => {
     if (!roundId) return setStatus("Click Play to start a round.");
-    if (!selected) return setStatus("Select one picture to bet.");
-    if (!Number.isFinite(Number(amount)) || Number(amount) < 50) {
-      return setStatus("Minimum bet is \u20B950.");
+    if (!selected.length) return setStatus("Select at least one picture to bet.");
+    if (selected.length > 5) return setStatus("You can select up to 5 pictures only.");
+    if (!Number.isFinite(Number(amount)) || Number(amount) < 20) {
+      return setStatus("Minimum bet is \u20B920.");
     }
 
     try {
@@ -49,12 +61,15 @@ export default function PappuPlayingPictures({ onBack }) {
 
       const res = await api.post("/api/bet/place", {
         roundId,
-        symbol: selected,
+        symbols: selected,
         amount: Number(amount),
       });
 
       const gameResult = res.data.result; // WIN / LOSE
       setPendingResult(gameResult);
+      setResultSymbol(res.data.winningSymbol || selected);
+      setPendingPayout(Number(res.data.payout || 0));
+      setPendingStake(Number(amount));
       setScratchActive(true);
       setAutoReveal(true);
     } catch (err) {
@@ -69,11 +84,21 @@ export default function PappuPlayingPictures({ onBack }) {
     setScratchActive(false);
     setResult(pendingResult);
     setStatus(pendingResult === "WIN" ? "You won. Nice play." : "Try again.");
+    setOutcomePopup({
+      open: true,
+      result: pendingResult,
+      amount: Number(pendingStake || amount),
+      payout: Number(pendingPayout || 0),
+    });
     if (pendingResult === "WIN") playWin();
     else playLose();
     setPendingResult(null);
+    setPendingPayout(0);
+    setPendingStake(0);
     setAutoReveal(false);
   };
+
+  const revealed = PAPPU_SYMBOLS.find((s) => s.key === resultSymbol);
 
   return (
     <div className="ppx-shell">
@@ -103,15 +128,15 @@ export default function PappuPlayingPictures({ onBack }) {
             {result ? (result === "WIN" ? "YOU WON" : "YOU LOST") : "RESULT"}
           </div>
           <div className="ppx-reveal-card">
-            {selected && (
+            {resultSymbol && (
               <>
                 <img
-                  src={PAPPU_SYMBOLS.find((s) => s.key === selected)?.src}
-                  alt="Selected"
+                  src={revealed?.src}
+                  alt="Declared result"
                   className="ppx-reveal-img"
                 />
                 <div className="ppx-reveal-label">
-                  {PAPPU_SYMBOLS.find((s) => s.key === selected)?.label}
+                  {revealed?.label || resultSymbol}
                 </div>
               </>
             )}
@@ -138,8 +163,15 @@ export default function PappuPlayingPictures({ onBack }) {
               {PAPPU_SYMBOLS.map((s) => (
                 <button
                   key={s.key}
-                  className={`ppx-tile ${selected === s.key ? "is-active" : ""}`}
-                  onClick={() => !loading && setSelected(s.key)}
+                  className={`ppx-tile ${selected.includes(s.key) ? "is-active" : ""}`}
+                  onClick={() => {
+                    if (loading) return;
+                    setSelected((prev) => {
+                      if (prev.includes(s.key)) return prev.filter((x) => x !== s.key);
+                      if (prev.length >= 5) return prev;
+                      return [...prev, s.key];
+                    });
+                  }}
                   disabled={loading}
                 >
                   <div className="ppx-tile-inner">
@@ -158,7 +190,7 @@ export default function PappuPlayingPictures({ onBack }) {
             <div className="ppx-card">
               <div className="ppx-card-title">Bet Amount</div>
               <div className="ppx-chips">
-                {[50, 100, 500, 1000].map((v) => (
+                {[20, 50, 100, 500, 1000].map((v) => (
                   <button
                     key={v}
                     className={`ppx-chip ${amount === v ? "is-active" : ""}`}
@@ -170,12 +202,13 @@ export default function PappuPlayingPictures({ onBack }) {
                 ))}
               </div>
               <div className="ppx-custom">
-                <label className="ppx-custom-label">Min bet: {"\u20B9"}50</label>
+                <label className="ppx-custom-label">Min bet: {"\u20B9"}20</label>
+                <label className="ppx-custom-label">Selected: {selected.length}/5</label>
                 <label className="ppx-custom-label">Custom Amount</label>
                 <input
                   className="ppx-custom-input"
                   type="number"
-                  min="50"
+                  min="20"
                   placeholder="Enter amount"
                   value={amount}
                   onChange={(e) => setAmount(Number(e.target.value))}
@@ -196,7 +229,7 @@ export default function PappuPlayingPictures({ onBack }) {
                 <button
                   className="ppx-btn ppx-btn-accent"
                   onClick={placeBet}
-                  disabled={loading || !roundId || !selected}
+                  disabled={loading || !roundId || !selected.length}
                 >
                   Bet
                 </button>
@@ -207,7 +240,7 @@ export default function PappuPlayingPictures({ onBack }) {
               <div className="ppx-mini">
                 <div className="ppx-mini-title">Quick Tips</div>
                 <div className="ppx-mini-text">
-                  Pick one picture and place your bet. Results are instant.
+                  Pick up to 5 pictures and place your bet. Result match pays 10x (stake included).
                 </div>
               </div>
             </div>
@@ -225,6 +258,14 @@ export default function PappuPlayingPictures({ onBack }) {
           Play responsibly. 18+ only. This is a UI mock for a premium gaming feel.
         </div>
       </div>
+      <BetOutcomePopup
+        open={outcomePopup.open}
+        result={outcomePopup.result}
+        amount={outcomePopup.amount}
+        payout={outcomePopup.payout}
+        gameName="Pappu Playing Pictures"
+        onClose={() => setOutcomePopup((prev) => ({ ...prev, open: false }))}
+      />
     </div>
   );
 }
