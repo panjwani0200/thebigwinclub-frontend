@@ -12,9 +12,37 @@ export default function MyBets() {
   useEffect(() => {
     if (!userId) return;
 
-    api
-      .get("/api/bet/my")
-      .then((res) => setBets(res.data || []))
+    Promise.allSettled([api.get("/api/bet/my"), api.get("/api/matka/bets/me")])
+      .then((results) => {
+        const normalBets =
+          results[0].status === "fulfilled" ? results[0].value.data || [] : [];
+        const matkaBetsRaw =
+          results[1].status === "fulfilled" ? results[1].value.data || [] : [];
+
+        const matkaBets = matkaBetsRaw.map((b) => {
+          const amount = Number(b.amount || 0);
+          const payout = Number(b.payout || 0);
+          const status = String(b.status || "").toUpperCase();
+          const profit =
+            status === "WIN" ? payout - amount : status === "LOSE" ? -amount : 0;
+
+          return {
+            _id: `matka-${b._id}`,
+            gameSlug: "matka",
+            amount,
+            payout,
+            profit,
+            createdAt: b.createdAt,
+            gameId: { name: `Matka (${b.marketId || "-"})` },
+          };
+        });
+
+        const merged = [...normalBets, ...matkaBets].sort(
+          (a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0)
+        );
+
+        setBets(merged);
+      })
       .catch((err) => {
         console.error("MY BETS ERROR:", err);
         setBets([]);

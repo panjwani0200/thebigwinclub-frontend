@@ -348,35 +348,39 @@ export default function MatkaPlay() {
                     </button>
                   ))}
                 </div>
-
                 <label className="block mt-3 text-sm">Select Digits</label>
-                <div className="matka-single-ank-grid">
-                  {Array.from({ length: 10 }, (_, i) => String(i)).map((digit) => (
-                    <div key={digit} className="matka-single-ank-cell">
-                      <button
-                        type="button"
-                        className="matka-patti-btn"
-                        onClick={() =>
-                          setSingleAnkAmounts((prev) => ({
-                            ...prev,
-                            [digit]: singleAnkQuickAmount,
-                          }))
-                        }
-                      >
-                        {digit}
-                      </button>
-                      <input
-                        className="matka-input"
-                        type="number"
-                        min="0"
-                        value={singleAnkAmounts[digit] || ""}
-                        onChange={(e) =>
-                          setSingleAnkAmounts((prev) => ({ ...prev, [digit]: e.target.value }))
-                        }
-                        placeholder="Amount"
-                      />
+                <div className="matka-patti">
+                  <div className="matka-patti-group">
+                    <div className="matka-patti-title">Single Ank (0-9)</div>
+                    <div className="matka-single-ank-grid">
+                      {Array.from({ length: 10 }, (_, i) => String(i)).map((digit) => (
+                        <div key={digit} className="matka-single-ank-cell">
+                          <button
+                            type="button"
+                            className="matka-patti-btn"
+                            onClick={() =>
+                              setSingleAnkAmounts((prev) => ({
+                                ...prev,
+                                [digit]: singleAnkQuickAmount,
+                              }))
+                            }
+                          >
+                            {digit}
+                          </button>
+                          <input
+                            className="matka-input"
+                            type="number"
+                            min="0"
+                            value={singleAnkAmounts[digit] || ""}
+                            onChange={(e) =>
+                              setSingleAnkAmounts((prev) => ({ ...prev, [digit]: e.target.value }))
+                            }
+                            placeholder="Amount"
+                          />
+                        </div>
+                      ))}
                     </div>
-                  ))}
+                  </div>
                 </div>
 
                 <div className="text-sm mt-2">Total Points: {"\u20B9"}{singleAnkTotal}</div>

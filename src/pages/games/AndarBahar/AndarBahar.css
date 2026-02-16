@@ -13,7 +13,7 @@
 
 .ab-stage {
   width: 100%;
-  max-width: 1000px;
+  max-width: 620px;
   display: grid;
   gap: 16px;
   min-width: 0;
@@ -124,6 +124,7 @@
   transition: 0.2s ease;
   text-align: left;
   min-width: 0;
+  overflow: hidden;
 }
 
 .ab-side.is-active {
@@ -208,6 +209,7 @@
 }
 
 .ab-chip {
+  width: 100%;
   padding: 10px 0;
   border-radius: 999px;
   border: 1px solid rgba(59, 130, 246, 0.45);
@@ -314,6 +316,15 @@
 
   .ab-stage {
     max-width: 100%;
+  }
+
+  .ab-topbar {
+    gap: 8px;
+    padding: 12px;
+  }
+
+  .ab-title {
+    font-size: 16px;
   }
 
   .ab-sides {

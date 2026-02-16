@@ -38,6 +38,7 @@ body {
   font-family: "Manrope", "Segoe UI", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
 }
 
 .casino-shell {
@@ -149,6 +150,8 @@ body {
   padding: 18px;
   box-shadow: 0 14px 30px rgba(2, 6, 23, 0.45);
   animation: riseIn 220ms ease-out;
+  min-width: 0;
+  overflow-x: hidden;
 }
 
 .casino-page h1,
@@ -370,7 +373,7 @@ body {
 }
 
 .casino-inline-table {
-  min-width: 680px;
+  min-width: 620px;
 }
 
 .casino-page th,

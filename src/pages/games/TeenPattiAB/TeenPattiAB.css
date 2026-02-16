@@ -13,7 +13,7 @@
 
 .tp-stage {
   width: 100%;
-  max-width: 980px;
+  max-width: 620px;
   display: grid;
   gap: 16px;
   min-width: 0;
@@ -85,6 +85,7 @@
   transition: 0.2s ease;
   text-align: center;
   min-width: 0;
+  overflow: hidden;
 }
 
 .tp-player.is-active {
@@ -152,6 +153,7 @@
 }
 
 .tp-chip {
+  width: 100%;
   padding: 10px 0;
   border-radius: 999px;
   border: 1px solid rgba(59, 130, 246, 0.45);
@@ -263,6 +265,15 @@
     max-width: 100%;
   }
 
+  .tp-topbar {
+    gap: 8px;
+    padding: 12px;
+  }
+
+  .tp-title {
+    font-size: 16px;
+  }
+
   .tp-players {
     grid-template-columns: 1fr;
   }
@@ -278,5 +289,9 @@
   .tp-card-img {
     width: 46px;
     height: 64px;
+  }
+
+  .tp-card-img.is-spinning {
+    animation-duration: 0.55s;
   }
 }

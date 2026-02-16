@@ -23,6 +23,7 @@ export default function TeenPattiAB({ onBack }) {
     amount: 0,
     payout: 0,
   });
+  const isMobile = typeof window !== "undefined" && window.matchMedia("(max-width: 720px)").matches;
 
   const cardPool = useMemo(
     () => [
@@ -78,6 +79,8 @@ export default function TeenPattiAB({ onBack }) {
 
       setBetSnapshot({ side: selectedSide, amount: Number(amount) });
       setPolling(true);
+      // Keep animation short on mobile to avoid frame drops and layout jitter.
+      setTimeout(() => setSpinning(false), isMobile ? 650 : 1100);
     } catch (err) {
       setStatus(err.response?.data?.message || "Bet failed");
     } finally {
@@ -134,9 +137,9 @@ export default function TeenPattiAB({ onBack }) {
     const spinInterval = setInterval(() => {
       setACards((prev) => prev.map((i) => (i + 1) % cardPool.length));
       setBCards((prev) => prev.map((i) => (i + 2) % cardPool.length));
-    }, 120);
+    }, isMobile ? 160 : 120);
     return () => clearInterval(spinInterval);
-  }, [spinning, cardPool.length]);
+  }, [spinning, cardPool.length, isMobile]);
 
   return (
     <div className="tp-shell">
