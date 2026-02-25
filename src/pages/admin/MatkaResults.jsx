@@ -5,6 +5,8 @@ export default function MatkaResults() {
   const [markets, setMarkets] = useState([]);
   const [selected, setSelected] = useState("");
   const [result, setResult] = useState("");
+  const [openTime, setOpenTime] = useState("");
+  const [closeTime, setCloseTime] = useState("");
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -22,6 +24,17 @@ export default function MatkaResults() {
   useEffect(() => {
     loadMarkets();
   }, []);
+
+  useEffect(() => {
+    const active = markets.find((m) => m.marketId === selected);
+    if (!active) {
+      setOpenTime("");
+      setCloseTime("");
+      return;
+    }
+    setOpenTime(active.openTime || "");
+    setCloseTime(active.closeTime || "");
+  }, [selected, markets]);
 
   const declareResult = async () => {
     if (!selected || !result) return;
@@ -92,6 +105,30 @@ export default function MatkaResults() {
     }
   };
 
+  const updateTiming = async () => {
+    if (!selected) return;
+    if (!openTime.trim() || !closeTime.trim()) {
+      setError("Both open and close time are required");
+      return;
+    }
+    try {
+      setLoading(true);
+      setError("");
+      setMessage("");
+      await api.patch(`/api/admin/matka/markets/${selected}/timing`, {
+        openTime: openTime.trim(),
+        closeTime: closeTime.trim(),
+      });
+      setMessage("Market timing updated.");
+      await loadMarkets();
+    } catch (err) {
+      console.error("MATKA TIMING UPDATE ERROR:", err);
+      setError(err.response?.data?.message || "Failed to update timing");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <section>
       <h2 className="casino-section-title">Matka Results</h2>
@@ -113,9 +150,25 @@ export default function MatkaResults() {
         />
       </div>
 
+      <div className="casino-grid-2 mt-2">
+        <input
+          value={openTime}
+          onChange={(e) => setOpenTime(e.target.value)}
+          placeholder="Open Time (e.g. 10:00 AM)"
+        />
+        <input
+          value={closeTime}
+          onChange={(e) => setCloseTime(e.target.value)}
+          placeholder="Close Time (e.g. 02:30 PM)"
+        />
+      </div>
+
       <div className="casino-actions mt-1">
         <button onClick={declareResult} disabled={loading}>
           {loading ? "Saving..." : "Declare Result"}
+        </button>
+        <button className="casino-btn-ghost" onClick={updateTiming} disabled={loading}>
+          Update Timing
         </button>
         <button className="casino-btn-ghost" onClick={openMarket} disabled={loading}>
           Open Market
