@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import api from "../../services/api";
 
 export default function InlineBetHistory({
@@ -15,6 +15,7 @@ export default function InlineBetHistory({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [page, setPage] = useState(1);
+  const hasLoadedRef = useRef(false);
 
   const normalizedSlugs = useMemo(
     () => gameSlugs.map((slug) => String(slug || "").toLowerCase()),
@@ -28,7 +29,8 @@ export default function InlineBetHistory({
   useEffect(() => {
     const load = async () => {
       try {
-        setLoading(true);
+        const firstLoad = !hasLoadedRef.current;
+        if (firstLoad) setLoading(true);
         setError("");
         const res = await api.get("/api/bet/my");
         const all = res.data || [];
@@ -37,11 +39,15 @@ export default function InlineBetHistory({
           normalizedSlugs.includes(String(b.gameSlug || "").toLowerCase())
         );
         const capped = filtered.slice(0, Math.max(limit, 1));
+        const deduped = Array.from(
+          new Map(capped.map((row) => [String(row?._id || ""), row])).values()
+        ).filter((row) => row && row._id);
 
-        setBets(capped);
+        setBets(deduped);
+        hasLoadedRef.current = true;
       } catch (err) {
         console.error("INLINE BET HISTORY ERROR:", err);
-        setBets([]);
+        if (!hasLoadedRef.current) setBets([]);
         setError("Failed to load previous bets");
       } finally {
         setLoading(false);

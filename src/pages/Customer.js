@@ -17,6 +17,8 @@ export default function Customer() {
   const navigate = useNavigate();
 
   useEffect(() => {
+    const userId = localStorage.getItem("userId");
+
     const loadProfile = async () => {
       try {
         const res = await api.get("/api/auth/me");
@@ -28,11 +30,13 @@ export default function Customer() {
 
     const loadBalance = async () => {
       try {
-        const res = await api.get("/api/wallet");
+        if (!userId) return;
+        const res = await api.get(`/api/wallet/${userId}`);
         const value = Number(res.data?.balance || 0);
         setHeaderBalance(Number.isFinite(value) ? value : 0);
       } catch (err) {
         console.error("CUSTOMER BALANCE ERROR:", err);
+        setHeaderBalance(0);
       }
     };
 
@@ -74,7 +78,7 @@ export default function Customer() {
           <div className="casino-header-title">BigWinClub</div>
           <div className="casino-header-sub">Customer Lounge</div>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center justify-end gap-2">
           {customerName ? <span className="casino-pill">Hey {customerName}</span> : null}
           {headerBalance !== null ? (
             <span className="casino-pill">
