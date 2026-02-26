@@ -286,6 +286,10 @@ export default function PappuPlayingPictures({ onBack }) {
             title="Previous Pappu Bets"
             gameSlugs={["pappu-playing-pictures"]}
             refreshKey={`${result || ""}-${roundId || ""}`}
+            limit={60}
+            perPage={6}
+            enablePagination
+            compact
           />
         ) : null}
 

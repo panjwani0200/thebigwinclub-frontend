@@ -13,6 +13,7 @@ export default function Customer() {
   const [active, setActive] = useState("dashboard");
   const [currentGame, setCurrentGame] = useState(null);
   const [customerName, setCustomerName] = useState("");
+  const [headerBalance, setHeaderBalance] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -25,7 +26,21 @@ export default function Customer() {
       }
     };
 
+    const loadBalance = async () => {
+      try {
+        const res = await api.get("/api/wallet");
+        const value = Number(res.data?.balance || 0);
+        setHeaderBalance(Number.isFinite(value) ? value : 0);
+      } catch (err) {
+        console.error("CUSTOMER BALANCE ERROR:", err);
+      }
+    };
+
     loadProfile();
+    loadBalance();
+
+    const interval = setInterval(loadBalance, 5000);
+    return () => clearInterval(interval);
   }, []);
 
   const logout = () => {
@@ -61,6 +76,11 @@ export default function Customer() {
         </div>
         <div className="flex items-center gap-3">
           {customerName ? <span className="casino-pill">Hey {customerName}</span> : null}
+          {headerBalance !== null ? (
+            <span className="casino-pill">
+              Balance: {"\u20B9"}{headerBalance.toFixed(2)}
+            </span>
+          ) : null}
           <button className="casino-btn-danger" onClick={logout}>
             Logout
           </button>

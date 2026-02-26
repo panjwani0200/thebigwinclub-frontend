@@ -266,11 +266,14 @@ export default function AndarBahar({ onBack }) {
           ))}
         </div>
 
-        <InlineBetHistory
-          title="Previous Andar Bahar Bets"
-          gameSlugs={["andar-bahar"]}
-          refreshKey={`${result || ""}-${roundId || ""}`}
-        />
+        {result ? (
+          <InlineBetHistory
+            title="Previous Andar Bahar Bets"
+            gameSlugs={["andar-bahar"]}
+            refreshKey={`${result || ""}-${roundId || ""}`}
+            resultAsDots
+          />
+        ) : null}
       </div>
       <BetOutcomePopup
         open={outcomePopup.open}

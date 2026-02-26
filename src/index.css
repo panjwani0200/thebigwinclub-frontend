@@ -376,6 +376,56 @@ body {
   min-width: 620px;
 }
 
+.casino-inline-compact-wrap .casino-inline-table {
+  min-width: 520px;
+}
+
+.casino-inline-table-compact th,
+.casino-inline-table-compact td {
+  padding: 6px 8px;
+  font-size: 11px;
+}
+
+.casino-inline-title-compact {
+  font-size: 18px;
+}
+
+.casino-inline-sub-compact {
+  font-size: 11px;
+}
+
+.casino-inline-result-dot-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.casino-result-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  display: inline-block;
+}
+
+.casino-result-dot.win-blue {
+  background: #3b82f6;
+  box-shadow: 0 0 10px rgba(59, 130, 246, 0.7);
+}
+
+.casino-result-dot.lose-red {
+  background: #ef4444;
+  box-shadow: 0 0 10px rgba(239, 68, 68, 0.65);
+}
+
+.casino-result-dot.pending-gray {
+  background: #94a3b8;
+}
+
+.casino-inline-dot-label {
+  font-size: 11px;
+  color: #cbd5e1;
+}
+
 .casino-page th,
 .casino-page td {
   text-align: left;

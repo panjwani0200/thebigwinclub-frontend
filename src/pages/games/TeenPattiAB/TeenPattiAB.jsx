@@ -1,4 +1,4 @@
-﻿import { useEffect, useMemo, useState } from "react";
+﻿import { useEffect, useMemo, useRef, useState } from "react";
 import api from "../../../services/api";
 import "./TeenPattiAB.css";
 import InlineBetHistory from "../../../components/customer/InlineBetHistory";
@@ -24,6 +24,7 @@ export default function TeenPattiAB({ onBack }) {
     amount: 0,
     payout: 0,
   });
+  const roundResolvedRef = useRef(false);
   const isMobile =
     typeof window !== "undefined" && window.matchMedia("(max-width: 720px)").matches;
 
@@ -71,6 +72,7 @@ export default function TeenPattiAB({ onBack }) {
       setStatus("Waiting for result...");
       setSpinning(true);
       setBetPlacedAt(Date.now());
+      roundResolvedRef.current = false;
 
       await api.post("/api/game/teenpatti-ab/bet", {
         roundId,
@@ -88,6 +90,7 @@ export default function TeenPattiAB({ onBack }) {
   };
 
   const nextRound = () => {
+    roundResolvedRef.current = false;
     setSelectedSide(null);
     setResult(null);
     setStatus("Place your bet");
@@ -105,7 +108,8 @@ export default function TeenPattiAB({ onBack }) {
     const interval = setInterval(async () => {
       try {
         const res = await api.get(`/api/game/teenpatti-ab/round/${roundId}`);
-        if (res.data.status === "CLOSED") {
+        if (res.data.status === "CLOSED" && !roundResolvedRef.current) {
+          roundResolvedRef.current = true;
           const betSide = betSnapshot?.side || selectedSide;
           const betAmount = Number(betSnapshot?.amount || amount);
           const win = res.data.winner === betSide;
@@ -262,6 +266,7 @@ export default function TeenPattiAB({ onBack }) {
             title="Previous Teen Patti Bets"
             gameSlugs={["teen-patti-ab"]}
             refreshKey={`${result || ""}-${roundId || ""}`}
+            resultAsDots
           />
         ) : null}
       </div>
