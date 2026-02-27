@@ -132,7 +132,9 @@ export default function MatkaResults() {
   return (
     <section>
       <h2 className="casino-section-title">Matka Results</h2>
-      <p className="casino-section-sub">Declare results manually using format: XXX-YY-XXX</p>
+      <p className="casino-section-sub">
+        Declare results using: XXX-YY-XXX, XXX-YY, XXX-Y, YY-XXX, or Y-XXX
+      </p>
 
       <div className="casino-grid-2 mt-3">
         <select value={selected} onChange={(e) => setSelected(e.target.value)}>
@@ -146,7 +148,7 @@ export default function MatkaResults() {
         <input
           value={result}
           onChange={(e) => setResult(e.target.value)}
-          placeholder="Result (XXX-YY-XXX)"
+          placeholder="Result (e.g. 123-45-678)"
         />
       </div>
 
