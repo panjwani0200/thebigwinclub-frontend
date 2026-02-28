@@ -6,18 +6,18 @@ import InlineBetHistory from "../../../components/customer/InlineBetHistory";
 import BetOutcomePopup from "../../../components/customer/BetOutcomePopup";
 
 const DISPLAY_ORDER = [
-  "football",
-  "kabutar",
   "umbrella",
-  "coin",
-  "diya",
-  "rose",
+  "football",
   "star",
+  "diya",
   "cow",
-  "joker",
-  "butterfly",
-  "rabbit",
   "bucket",
+  "joker",
+  "coin",
+  "rose",
+  "butterfly",
+  "kabutar",
+  "rabbit",
 ];
 
 export default function PappuPlayingPictures({ onBack }) {
